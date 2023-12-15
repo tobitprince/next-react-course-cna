@@ -1,18 +1,25 @@
+import Link from "next/link"
+import postgres from "postgres";
+const sql = postgres(process.env.DATABASE_URL!);
+async function Quizzes() {
+  const quizzes = await sql`
+    SELECT * FROM quizzes
+  `;
+  return (
+    <ul>
+      {quizzes.map((quiz) => (
+        <li key={quiz.id}>
+          <Link href={`/quiz/${quiz.id}`}>{quiz.name}</Link>
+        </li>
+      ))}
+    </ul>
+  );
+}
 export default function Home() {
   return (
    <section>
     <h1>All Quizzes</h1>
-    <ul>
-      <li>
-        <a href="/quiz/1">Quiz 1</a>
-      </li>
-      <li>
-        <a href="/quiz/2">Quiz 2</a>
-      </li>
-      <li>
-        <a href="/quiz/3">Quiz 3</a>
-      </li>
-    </ul>
+   <Quizzes />
    </section>
   );
 }
